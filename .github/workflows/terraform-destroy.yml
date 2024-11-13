@@ -27,4 +27,4 @@ jobs:
               run: terraform init -reconfigure -input=false -backend-config="storage_account_name=myinfrastate" -backend-config="container_name=tfstate" -backend-config="access_key=${{steps.get-access-key.outputs.primary_access_key}}" -backend-config="key=dev/terraform.tfstate"
             - name: Terraform destroy
               working-directory: ${{env.WORKING_DIRECTORY}}
-              run: terraform destroy -auto-approve
+              run: terraform destroy -auto-approve -var subscription_id=$SUBSCRIPTION_ID
