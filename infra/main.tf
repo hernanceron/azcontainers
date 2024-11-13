@@ -23,7 +23,7 @@ module "azure_function_proyecto" {
   source = "./modules/azurefunction"
   resource_group_name = azurerm_resource_group.rg-proyecto.name
   function_name = "azfunctionproyectohca"
-  location = "eastus"
+  location = "eastus2"
   name = "azname2"
   storage_account_name = module.storage_container_proyecto.storage_account_name
   primary_connection_string = module.storage_container_proyecto.primary_connection_string
