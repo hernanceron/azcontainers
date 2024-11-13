@@ -31,8 +31,8 @@ jobs:
               run: terraform init -reconfigure -input=false -backend-config="storage_account_name=myinfrastate" -backend-config="container_name=tfstate" -backend-config="access_key=${{steps.get-access-key.outputs.primary_access_key}}" -backend-config="key=dev/terraform.tfstate"
               working-directory: ${{env.WORKING_DIR}}
             - id: plan
-              name: Terraform Plan -var subscription_id=$SUBSCRIPTION_ID
-              run: terraform plan -no-color 
+              name: Terraform Plan 
+              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID
               working-directory: ${{env.WORKING_DIR}}
             - id: apply
               name: Terraform Apply
