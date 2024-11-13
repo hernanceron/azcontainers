@@ -18,3 +18,14 @@ module "storage_container_proyecto" {
     name_storage_container = "blobstoragecontainer"
     location = "eastus"
 }
+
+module "azure_function_proyecto" {
+  source = "./modules/azurefunction"
+  resource_group_name = azurerm_resource_group.rg-proyecto.name
+  function_name = "azfunctionproyectohca"
+  location = "eastus"
+  name = "azname2"
+  storage_account_name = module.storage_container_proyecto.storage_account_name
+  primary_connection_string = module.storage_container_proyecto.primary_connection_string
+  storage_account_access_key = module.storage_container_proyecto.primary_access_key
+}
