@@ -1,0 +1,40 @@
+name: "Create Infraestructure"
+on:
+    workflow_run: 
+        workflows: ["Create State File"]
+        types: 
+            - completed
+    
+    workflow_dispatch:
+env:
+    WORKING_DIR: "./infra"
+   
+jobs:
+    create-infra:
+        name: "Create infraestructure"
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3             
+            - name: Azure Login
+              uses: azure/login@v2
+              with:
+                creds: ${{secrets.AZURE_CREDENTIALS}}
+            - name: Get Access Key
+              id: get-access-key
+              run: |
+                PRIMARY_ACCESS_KEY=$(az storage account keys list --resource-group my-infra-state-rg --account-name myinfrastate --query "[0].value" --output tsv)
+                echo "primary_access_key=$PRIMARY_ACCESS_KEY" >> $GITHUB_OUTPUT          
+            - name: Terraform Init
+              run: terraform init -reconfigure -input=false -backend-config="storage_account_name=myinfrastate" -backend-config="container_name=tfstate" -backend-config="access_key=${{steps.get-access-key.outputs.primary_access_key}}" -backend-config="key=dev/terraform.tfstate"
+              working-directory: ${{env.WORKING_DIR}}
+            - id: plan
+              name: Terraform Plan
+              run: terraform plan -no-color 
+              working-directory: ${{env.WORKING_DIR}}
+            - id: apply
+              name: Terraform Apply
+              run: terraform apply -auto-approve 
+              working-directory: ${{env.WORKING_DIR}}
