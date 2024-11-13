@@ -14,7 +14,7 @@ module "networking_proyecto" {
 module "storage_container_proyecto" {
     source = "./modules/storageaccount"
     resource_group_name = azurerm_resource_group.rg-proyecto.name
-    name = "${random_pet.prefix.id}schca"
-    name_storage_container = "${random_pet.prefix.id}storagecontainer"
+    name = "storageaccountschca"
+    name_storage_container = "blobstoragecontainer"
     location = "eastus"
 }
