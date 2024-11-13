@@ -1,0 +1,30 @@
+name: Terraform Destroy
+on:
+    workflow_dispatch: 
+env:
+    SUBSCRIPTION_ID: "e8c19839-7903-4c24-9401-ce4a476a4ce2"
+    WORKING_DIRECTORY: "./infra"
+jobs:
+    destroy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3           
+            - name: Azure Login
+              uses: azure/login@v2
+              with:
+                creds: ${{secrets.AZURE_CREDENTIALS}}
+            - name: Get Access Key
+              id: get-access-key
+              run: |
+                PRIMARY_ACCESS_KEY=$(az storage account keys list --resource-group my-infra-state-rg --account-name myinfrastate --query "[0].value" --output tsv)
+                echo "primary_access_key=$PRIMARY_ACCESS_KEY" >> $GITHUB_OUTPUT          
+            - name: Terraform init
+              working-directory: ${{env.WORKING_DIRECTORY}}
+              run: terraform init -reconfigure -input=false -backend-config="storage_account_name=myinfrastate" -backend-config="container_name=tfstate" -backend-config="access_key=${{steps.get-access-key.outputs.primary_access_key}}" -backend-config="key=dev/terraform.tfstate"
+            - name: Terraform destroy
+              working-directory: ${{env.WORKING_DIRECTORY}}
+              run: terraform destroy -auto-approve
