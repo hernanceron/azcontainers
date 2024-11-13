@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "planaz_proyecto" {
   resource_group_name = var.resource_group_name
   location = var.location
   os_type = "Linux"
-  sku_name = "S1"
+  sku_name = "F1"
 }
 
 resource "azurerm_linux_function_app" "linux_function_proyecto" {
