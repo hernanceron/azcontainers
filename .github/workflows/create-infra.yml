@@ -15,7 +15,7 @@ jobs:
         name: "Create infraestructure"
         runs-on: ubuntu-latest
         outputs:
-          acr_name: ${{steps.apply.outputs.acr_name}}
+          acr_name: ${{steps.output.outputs.acr_name}}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
