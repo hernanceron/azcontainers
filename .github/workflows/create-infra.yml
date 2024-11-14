@@ -43,7 +43,7 @@ jobs:
               working-directory: ${{env.WORKING_DIR}}
             - id: output
               name: Terraform Output
-              run: echo "acr_name=$(terraform output acrname) >> $GITHUB_OUTPUT
+              run: echo "acr_name=$(terraform output acrname)" >> $GITHUB_OUTPUT
               working-directory: ${{env.WORKING_DIR}}
     build-and-deploy:
       needs: create-infra
