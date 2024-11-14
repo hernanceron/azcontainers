@@ -29,3 +29,20 @@ module "azure_function_proyecto" {
   primary_connection_string = module.storage_container_proyecto.primary_connection_string
   storage_account_access_key = module.storage_container_proyecto.primary_access_key
 }
+
+module "azure_container_registry" {
+  source = "./modules/containerregistry"
+  location = "eastus2"
+  name_acr = "acrregistryhca"
+  resource_group_name = azurerm_resource_group.rg-proyecto.name
+}
+
+module "azure_container_app" {
+  source = "./modules/containerapp"
+  acr_login_server = module.azure_container_registry.acrname
+  resource_group_name = azurerm_resource_group.rg-proyecto.name
+  location = "eastus2"
+  name_container_app = "azcontainerapphca"
+  name_container_environment = "azcontainerenvironmenthca"
+  name_log_analytics = "azloghca"
+}
