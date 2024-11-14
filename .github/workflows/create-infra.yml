@@ -16,6 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         outputs:
           acr_name: ${{steps.output.outputs.acr_name}}
+          acr_login_server: ${{steps.output.outputs.acr_login_server}}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -43,7 +44,9 @@ jobs:
               working-directory: ${{env.WORKING_DIR}}
             - id: output
               name: Terraform Output
-              run: echo "acr_name=$(terraform output -raw acrname)" >> $GITHUB_OUTPUT
+              run: |
+                echo "acr_name=$(terraform output -raw acrname)" >> $GITHUB_OUTPUT
+                echo "acr_login_server=$(terraform output -raw acrnamelogin)" >> $GITHUB_OUTPUT
               working-directory: ${{env.WORKING_DIR}}
     build-and-deploy:
       needs: create-infra
@@ -59,7 +62,7 @@ jobs:
         - name: Azure Login Container Registry
           uses: azure/docker-login@v2
           with:
-            login-server: ${{ needs.create-infra.outputs.acr_name }}
+            login-server: ${{ needs.create-infra.outputs.acr_login_server }}
             username: ${{secrets.AZURE_CLIENT_ID}}
             password: ${{secrets.AZURE_CLIENT_SECRET}}
         - name: Build and push Docker Image
