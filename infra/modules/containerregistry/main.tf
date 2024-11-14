@@ -11,7 +11,7 @@ resource "azurerm_container_registry" "acrproyecto" {
 }
 
 resource "azurerm_role_assignment" "roleproyecto" {
-  principal_id = data.azuread_service_principal.terraformHernan.id
+  principal_id = data.azuread_service_principal.terraformHernan.principal_id
   role_definition_name = "AcrPull"
   scope = azurerm_container_registry.acrproyecto.id
 }

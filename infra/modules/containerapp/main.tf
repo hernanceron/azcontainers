@@ -12,18 +12,3 @@ resource "azurerm_container_app_environment" "azure_container_environment" {
   resource_group_name = var.resource_group_name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_workspace.id
 }
-
-resource "azurerm_container_app" "container_app" {
-  name = var.name_container_app
-  container_app_environment_id = azurerm_container_app_environment.azure_container_environment.id
-  resource_group_name = var.resource_group_name
-  revision_mode = "Single"
-  template {
-    container {
-      name = "examplecontainerapp"
-      image = "${var.acr_login_server}/go-transacciones:latest"
-      cpu = 0.25
-      memory = "0.5Gi"
-    }
-  }
-}
