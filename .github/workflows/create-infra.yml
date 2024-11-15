@@ -73,9 +73,6 @@ jobs:
             docker build -t ${{ needs.create-infra.outputs.acr_name }}/go-transacciones:latest .
             docker push  ${{ needs.create-infra.outputs.acr_name }}/go-transacciones:latest
         - name: Despliegue en Azure Container Apps
-          uses: azure/container-apps-deploy-action@v1
-          with:
-            appSourcePath: ${{env.WORKING_CODE}}
-            acrName: ${{needs.create-infra.outputs.acr_login_server}}
-            imageToBuild: ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest            
-            resourceGroup: ${{needs.create-infra.outputs.resource_group_name}}
+          run: |
+           az containerapp update --name containerappproyectohca --resource-group ${{needs.create-infra.outputs.resource_group_name}} --image ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest
+          
