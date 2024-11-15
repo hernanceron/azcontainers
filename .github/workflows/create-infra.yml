@@ -54,15 +54,11 @@ jobs:
 
       steps:
         - name: Checkout Code
-          uses: actions/checkout@v4
-        - name: Azure Login
-          uses: azure/login@v2
-          with:
-            creds: ${{secrets.AZURE_CREDENTIALS}}
+          uses: actions/checkout@v4       
         - name: Azure Login Container Registry
-          uses: azure/docker-login@v2
+          uses: docker/login-action@v3
           with:
-            login-server: ${{ needs.create-infra.outputs.acr_login_server }}
+            registry: ${{ needs.create-infra.outputs.acr_name }}
             username: ${{secrets.AZURE_CLIENT_ID}}
             password: ${{secrets.AZURE_CLIENT_SECRET}}
         - name: Build and push Docker Image
