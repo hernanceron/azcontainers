@@ -7,3 +7,6 @@ output "acrnamelogin" {
 output "resource_group_name" {
   value = azurerm_resource_group.rg-proyecto.name
 }
+output "environment_name" {
+  value = module.azure_container_app.environment_name
+}
