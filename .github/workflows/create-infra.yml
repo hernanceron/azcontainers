@@ -77,6 +77,5 @@ jobs:
           with:
             appSourcePath: ${{env.WORKING_CODE}}
             acrName: ${{needs.create-infra.outputs.acr_login_server}}
-            imageToBuild: ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest
-            containerAppName: my-container-app
+            imageToBuild: ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest            
             resourceGroup: ${{needs.create-infra.outputs.resource_group_name}}
