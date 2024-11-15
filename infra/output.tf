@@ -10,3 +10,6 @@ output "resource_group_name" {
 output "environment_name" {
   value = module.azure_container_app.environment_name
 }
+output "container_app_name" {
+  value = module.azure_container_app.container_app_name
+}

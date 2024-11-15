@@ -40,7 +40,7 @@ module "azure_container_registry" {
 module "azure_container_app" {
   source = "./modules/containerapp"
   acr_login_server = module.azure_container_registry.acrname
-  resource_group_name = azurerm_resource_group.rg-proyecto.name
+  resource_group_name = azurerm_resource_group.rg-proyecto.name  
   location = "eastus2"
   name_container_app = "azcontainerapphca"
   name_container_environment = "azcontainerenvironmenthca"
