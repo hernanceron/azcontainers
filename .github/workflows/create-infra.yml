@@ -17,6 +17,7 @@ jobs:
         outputs:
           acr_name: ${{steps.output.outputs.acr_name}}
           acr_login_server: ${{steps.output.outputs.acr_login_server}}
+          resource_group_name: ${{steps.output.outputs.resource_group_name}}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -47,6 +48,7 @@ jobs:
               run: |
                 echo "acr_name=$(terraform output -raw acrname)" >> $GITHUB_OUTPUT
                 echo "acr_login_server=$(terraform output -raw acrnamelogin)" >> $GITHUB_OUTPUT
+                echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
               working-directory: ${{env.WORKING_DIR}}
     build-and-deploy:
       needs: create-infra
@@ -77,4 +79,4 @@ jobs:
             acrName: ${{needs.create-infra.outputs.acr_login_server}}
             imageToBuild: ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest
             containerAppName: my-container-app
-            resourceGroup: my-rg
+            resourceGroup: ${{needs.create-infra.outputs.resource_group_name}}
