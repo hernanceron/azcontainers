@@ -62,7 +62,7 @@ jobs:
         - name: Azure Login Container Registry
           uses: docker/login-action@v3
           with:
-            registry: ${{ needs.create-infra.outputs.acr_name }}
+            registry: ${{ needs.create-infra.outputs.acr_login_server }}
             username: ${{secrets.AZURE_CLIENT_ID}}
             password: ${{secrets.AZURE_CLIENT_SECRET}}
         - name: Build and push Docker Image
