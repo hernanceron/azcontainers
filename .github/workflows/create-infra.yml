@@ -75,7 +75,7 @@ jobs:
           uses: azure/container-apps-deploy-action@v1
           with:
             appSourcePath: ${{ env.WORKING_CODE }}
-            acrName: ${{ needs.create-infra.outputs.acr_name }}
+            acrName: ${{ needs.create-infra.outputs.acr_login_server }}
             dockerfilePath: ${{env.WORKING_CODE}}/Dockerfile
             containerAppEnvironment: ${{needs.create-infra.outputs.environment_name}}
             containerAppName: ${{needs.create-infra.outputs.container_app_name}}
