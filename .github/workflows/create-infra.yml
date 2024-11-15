@@ -76,6 +76,7 @@ jobs:
           with:
             appSourcePath: ${{ env.WORKING_CODE }}
             acrName: ${{ needs.create-infra.outputs.acr_login_server }}
-            dockerfilePath: ${{env.WORKING_CODE}}/Dockerfile
+            dockerfilePath: Dockerfile
             containerAppEnvironment: ${{needs.create-infra.outputs.environment_name}}
             containerAppName: ${{needs.create-infra.outputs.container_app_name}}
+            resourceGroup: ${{needs.create-infra.outputs.resource_group_name}}
