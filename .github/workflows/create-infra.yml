@@ -54,7 +54,11 @@ jobs:
 
       steps:
         - name: Checkout Code
-          uses: actions/checkout@v4       
+          uses: actions/checkout@v4
+        - name: Azure Login
+          uses: azure/login@v2
+          with:
+            creds: ${{secrets.AZURE_CREDENTIALS}}       
         - name: Azure Login Container Registry
           uses: docker/login-action@v3
           with:
