@@ -12,29 +12,3 @@ resource "azurerm_container_app_environment" "azure_container_environment" {
   resource_group_name = var.resource_group_name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_workspace.id
 }
-
-resource "azurerm_container_app" "container_app_proyecto" {
-  name = var.name_container_app
-  container_app_environment_id = azurerm_container_app_environment.azure_container_environment.id
-  resource_group_name = var.resource_group_name
-  revision_mode = "Single"
-  template {
-     container {
-      name  = "my-container"
-      image = "mcr.microsoft.com/k8se/quickstart:latest"
-      cpu = 0.25
-      memory = "0.5Gi"         
-    }
-  }
-  ingress {
-    external_enabled = true
-    target_port = 80
-    traffic_weight {
-      latest_revision = true
-      percentage = 100
-    }
-  }
-  identity {
-    type = "SystemAssigned"
-  }
-}
