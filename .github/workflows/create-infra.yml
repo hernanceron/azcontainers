@@ -69,12 +69,7 @@ jobs:
             registry: ${{ needs.create-infra.outputs.acr_name }}
             username: ${{secrets.AZURE_CLIENT_ID}}
             password: ${{secrets.AZURE_CLIENT_SECRET}}
-        - name: Build and deploy Container App
-          uses: azure/container-apps-deploy-action@v1
-          with:
-            appSourcePath: ${{ env.WORKING_CODE }}
-            acrName: ${{ needs.create-infra.outputs.acr_login_server }}
-            dockerfilePath: Dockerfile
-            containerAppEnvironment: ${{needs.create-infra.outputs.environment_name}}            
-            resourceGroup: ${{needs.create-infra.outputs.resource_group_name}}
-            imageToBuild: ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest
+        - name: Deploy azure container app
+          run: |
+           az containerapp up --name my-container-app --resource-group ${{needs.create-infra.outputs.resource_group_name}} --location eastus2 --environment ${{needs.create-infra.outputs.environment_name}} \
+           --image ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest --target-port 8080 --ingress external --query properties.configuration.ingress.fqdn
