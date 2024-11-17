@@ -69,6 +69,11 @@ jobs:
             registry: ${{ needs.create-infra.outputs.acr_name }}
             username: ${{secrets.AZURE_CLIENT_ID}}
             password: ${{secrets.AZURE_CLIENT_SECRET}}
+        - name: Build and Push al ACR
+          working-directory: ${{ env.WORKING_CODE}}
+          run: |
+           docker build . -t ${{ needs.create-infra.outputs.acr_name }}/go-transacciones:${{ github.sha }}
+           docker push ${{ needs.create-infra.outputs.acr_name }}/go-transacciones:${{ github.sha }}
         - name: Deploy azure container app
           run: |
            az containerapp up --name my-container-app --resource-group ${{needs.create-infra.outputs.resource_group_name}} --location eastus2 --environment ${{needs.create-infra.outputs.environment_name}} \
