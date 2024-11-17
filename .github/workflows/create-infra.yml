@@ -77,4 +77,4 @@ jobs:
         - name: Deploy azure container app
           run: |
            az containerapp up --name my-container-app --resource-group ${{needs.create-infra.outputs.resource_group_name}} --location eastus2 --environment ${{needs.create-infra.outputs.environment_name}} \
-           --image ${{needs.create-infra.outputs.acr_name}}/go-transacciones:latest --target-port 8080 --ingress external --query properties.configuration.ingress.fqdn
+           --image ${{needs.create-infra.outputs.acr_name}}/go-transacciones:${{ github.sha }} --target-port 8080 --ingress external --query properties.configuration.ingress.fqdn
