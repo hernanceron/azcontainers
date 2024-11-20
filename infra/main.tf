@@ -45,6 +45,16 @@ module "azure_container_app" {
   name_log_analytics = "azloghca"
 }
 
+module "azure_database_mysql" {
+  source = "./modules/database"
+  admin_username = var.admin_username
+  administrator_password = var.administrator_password
+  name_database = var.db_name
+  name_database_server = var.db_server_name
+  resource_group_name = azurerm_resource_group.rg-proyecto.name
+  location = var.location
+}
+
 resource "port_entity" "azure_storage_account" {
   count      = length(module.storage_container_proyecto) > 0 ? 1 : 0
   identifier = module.storage_container_proyecto.storage_account_name
@@ -106,4 +116,27 @@ resource "port_entity" "azure_container_environment" {
   }
 
   depends_on = [module.azure_container_app]
+}
+
+resource "port_entity" "azure_mysql_flexible_server" {  
+  identifier = var.name_database
+  title      = var.name_database
+  blueprint  = "azureMySQLFlexibleServer"
+  run_id     = var.port_run_id
+  properties = {
+    string_props = {
+      "location"     = var.location
+      "version" = module.azure_database_mysql.mysql_version
+      "state" = "Running"
+      "passwordAuth" = "Enabled"
+      "publicNetworkAccess" = "Enabled"
+    }
+  }
+  relations = {
+    single_relations = {
+      "resourceGroup" = azurerm_resource_group.rg-proyecto.name
+    }
+  }
+
+  depends_on = [module.azure_database_mysql]
 }

@@ -11,6 +11,20 @@ on:
       port_context:
         required: true
         type: string
+      admin_username:
+        required: true
+        type: string
+      administrator_password:
+        required: true
+        type: string
+      db_name:
+        required: true
+        type: string
+      db_server_name:
+        required: true
+        type: string
+      
+            
 
 env:
     WORKING_DIR: "./infra"
@@ -47,7 +61,7 @@ jobs:
               working-directory: ${{env.WORKING_DIR}}
             - id: plan
               name: Terraform Plan 
-              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID
+              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID -var admin_username=${{ github.event.inputs.admin_username }} -var administrator_password=${{ github.event.inputs.administrator_password }} -var db_name=${{ github.event.inputs.db_name }} -var db_server_name=${{ github.event.inputs.db_server_name }}
               working-directory: ${{env.WORKING_DIR}}
             - id: log-plan
               name: Log in port del plan
@@ -55,7 +69,7 @@ jobs:
                curl -L 'https://api.getport.io/v1/actions/runs/${{ env.RUN_ID}}/logs' -H 'Content-Type: application/json' -H 'Authorization: ${{ secrets.PORT_API_KEY }}' -d '{  "message": "Se termino el plan" }'
             - id: apply
               name: Terraform Apply
-              run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID
+              run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID -var admin_username=${{ github.event.inputs.admin_username }} -var administrator_password=${{ github.event.inputs.administrator_password }} -var db_name=${{ github.event.inputs.db_name }} -var db_server_name=${{ github.event.inputs.db_server_name }}
               working-directory: ${{env.WORKING_DIR}}
             - id: log-apply
               name: Log in port del apply

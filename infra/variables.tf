@@ -17,3 +17,15 @@ variable "location" {
 variable "port_run_id" {
   type = string
 }
+variable "admin_username" {
+  type = string
+}
+variable "administrator_password" {
+  type = string
+}
+variable "db_name" {
+  type = string
+}
+variable "db_server_name" {
+  type = string
+}
