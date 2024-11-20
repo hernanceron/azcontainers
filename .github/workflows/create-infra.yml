@@ -49,10 +49,18 @@ jobs:
               name: Terraform Plan 
               run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID
               working-directory: ${{env.WORKING_DIR}}
+            - id: log-plan
+              name: Log in port del plan
+              run: |
+               curl -L 'https://api.getport.io/v1/actions/runs/$RUN_ID/logs' -H 'Content-Type: application/json' -H 'Authorization: ${{ secrets.PORT_API_KEY }}' -d '{  "message": "Se termino el plan" }
             - id: apply
               name: Terraform Apply
               run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID
               working-directory: ${{env.WORKING_DIR}}
+            - id: log-apply
+              name: Log in port del apply
+              run: |
+               curl -L 'https://api.getport.io/v1/actions/runs/$RUN_ID/logs' -H 'Content-Type: application/json' -H 'Authorization: ${{ secrets.PORT_API_KEY }}' -d '{  "message": "Se termino el apply" }
             - id: output
               name: Terraform Output
               run: |
