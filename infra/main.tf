@@ -47,8 +47,8 @@ module "azure_container_app" {
 
 resource "port_entity" "azure_storage_account" {
   count      = length(module.storage_container_proyecto) > 0 ? 1 : 0
-  identifier = module.storage_container_proyecto.name
-  title      = module.storage_container_proyecto.name
+  identifier = module.storage_container_proyecto.storage_account_name
+  title      = module.storage_container_proyecto.storage_account_name
   blueprint  = "azureStorage"
   run_id     = var.port_run_id
   properties = {
