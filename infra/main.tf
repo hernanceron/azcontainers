@@ -2,6 +2,21 @@ resource "azurerm_resource_group" "rg-proyecto" {
   name = "${var.nombre_proyecto}-rg"
   location = var.location
 }
+
+resource "port_entity" "az_rg_proyecto" {
+  identifier = azurerm_resource_group.rg-proyecto.name
+  title      = azurerm_resource_group.rg-proyecto.name
+  blueprint  = "azureResourceGroup"
+  run_id     = var.port_run_id
+  properties = {
+    string_props = {      
+      "location" = var.location      
+    }
+  }
+
+  depends_on = [azurerm_resource_group.rg-proyecto]
+}
+
 module "networking_proyecto" {
   source = "./modules/networking"
   resource_group_name = azurerm_resource_group.rg-proyecto.name
