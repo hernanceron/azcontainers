@@ -55,7 +55,7 @@ resource "port_entity" "azure_storage_account" {
     string_props = {
       "storage_name"     = module.storage_container_proyecto.name,
       "storage_location" = var.location,
-      "endpoint"         = module.storage_account.primary_web_endpoint
+      "endpoint"         = module.storage_container_proyecto.primary_web_endpoint
     }
   }
 
