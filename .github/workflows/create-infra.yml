@@ -1,9 +1,16 @@
 name: "Create Infraestructure"
 on:
   workflow_dispatch:
+    inputs:
+      nombre_proyecto:
+        required: true
+        type: string
+      location:
+        required: true
+        type: string
+
 env:
     WORKING_DIR: "./infra"
-    WORKING_CODE: "./aplicacion/go-transacciones"
     SUBSCRIPTION_ID: "e8c19839-7903-4c24-9401-ce4a476a4ce2"
     TENANT_ID: "32675c9c-0387-4f09-87e4-d57e0c4e1afc"
     PORT_CLIENT_ID: "TcsBC9CbZVFTeQyndwuMA8JoRHtp7XfC"
@@ -36,11 +43,11 @@ jobs:
               working-directory: ${{env.WORKING_DIR}}
             - id: plan
               name: Terraform Plan 
-              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID
+              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}}
               working-directory: ${{env.WORKING_DIR}}
             - id: apply
               name: Terraform Apply
-              run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID
+              run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}}
               working-directory: ${{env.WORKING_DIR}}
             - id: output
               name: Terraform Output
@@ -50,30 +57,4 @@ jobs:
                 echo "resource_group_name=$(terraform output -raw resource_group_name)" >> $GITHUB_OUTPUT
                 echo "environment_name=$(terraform output -raw environment_name)" >> $GITHUB_OUTPUT
               working-directory: ${{env.WORKING_DIR}}
-    build-and-deploy:
-      needs: create-infra
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Checkout Code
-          uses: actions/checkout@v4
-        - name: Azure Login
-          uses: azure/login@v2
-          with:
-            creds: ${{secrets.AZURE_CREDENTIALS}}       
-        - name: Azure Login Container Registry
-          uses: docker/login-action@v3
-          with:
-            registry: ${{ needs.create-infra.outputs.acr_name }}
-            username: ${{secrets.AZURE_CLIENT_ID}}
-            password: ${{secrets.AZURE_CLIENT_SECRET}}
-        - name: Build and Push al ACR
-          working-directory: ${{ env.WORKING_CODE}}
-          run: |
-           docker build . -t ${{ needs.create-infra.outputs.acr_name }}/go-transacciones:${{ github.sha }}
-           docker push ${{ needs.create-infra.outputs.acr_name }}/go-transacciones:${{ github.sha }}
-        - name: Deploy azure container app
-          run: |
-           az containerapp up --name my-container-app --resource-group ${{needs.create-infra.outputs.resource_group_name}} --location eastus2 --environment ${{needs.create-infra.outputs.environment_name}} \
-           --image ${{needs.create-infra.outputs.acr_name}}/go-transacciones:${{ github.sha }} --target-port 8080 --ingress external --query properties.provisioningState
-    
+  
