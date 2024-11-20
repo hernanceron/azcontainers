@@ -134,8 +134,8 @@ resource "port_entity" "azure_container_environment" {
 }
 
 resource "port_entity" "azure_mysql_flexible_server" {  
-  identifier = var.name_database
-  title      = var.name_database
+  identifier = var.db_name
+  title      = var.db_name
   blueprint  = "azureMySQLFlexibleServer"
   run_id     = var.port_run_id
   properties = {
