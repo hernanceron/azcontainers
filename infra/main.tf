@@ -93,7 +93,7 @@ resource "port_entity" "azure_container_registry" {
 }
 
 
-resource "port_entity" "azure_storage_account" {  
+resource "port_entity" "azure_container_environment" {  
   identifier = module.azure_container_app.environment_name
   title      = module.azure_container_app.environment_name
   blueprint  = "azureContainerEnvironment"
