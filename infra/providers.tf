@@ -4,6 +4,10 @@ terraform {
       source = "hashicorp/azurerm"
       version = "4.8.0"
     }
+    port = {
+      source  = "port-labs/port-labs"
+      version = "~> 1.0.0"
+    }
   }
   backend "azurerm" {
     resource_group_name = "my-infra-state-rg"
@@ -18,4 +22,9 @@ provider "azurerm" {
     features {
       
     }
+}
+
+provider "port" {
+  client_id = var.port_client_id     # or set the env var PORT_CLIENT_ID
+  secret    = var.port_client_secret # or set the env var PORT_CLIENT_SECRET
 }
