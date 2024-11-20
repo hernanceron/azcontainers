@@ -8,6 +8,9 @@ on:
       location:
         required: true
         type: string
+      port_context:
+        required: true
+        type: string
 
 env:
     WORKING_DIR: "./infra"
@@ -15,6 +18,7 @@ env:
     TENANT_ID: "32675c9c-0387-4f09-87e4-d57e0c4e1afc"
     PORT_CLIENT_ID: "TcsBC9CbZVFTeQyndwuMA8JoRHtp7XfC"
     PORT_CLIENT_SECRET: "2wbOjNOlpun9Xc13tBSQIv9kkRN6o1a0eEW3jUXo2igAZwiyLxxWyCJOJJtBKauQ"
+    RUN_ID: ${{fromJson(inputs.port_context).runId}}
 jobs:
     create-infra:
         name: "Create infraestructure"
@@ -43,11 +47,11 @@ jobs:
               working-directory: ${{env.WORKING_DIR}}
             - id: plan
               name: Terraform Plan 
-              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}}
+              run: terraform plan -no-color -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID
               working-directory: ${{env.WORKING_DIR}}
             - id: apply
               name: Terraform Apply
-              run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}}
+              run: terraform apply -auto-approve -var subscription_id=$SUBSCRIPTION_ID -var port_client_id=$PORT_CLIENT_ID -var port_client_secret=$PORT_CLIENT_SECRET -var nombre_proyecto=${{github.event.inputs.nombre_proyecto}} -var location=${{ github.event.inputs.location}} -var port_run_id=$RUN_ID
               working-directory: ${{env.WORKING_DIR}}
             - id: output
               name: Terraform Output
